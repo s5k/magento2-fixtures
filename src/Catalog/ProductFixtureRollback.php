@@ -5,6 +5,8 @@ namespace TddWizard\Fixtures\Catalog;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Exception\StateException;
 use Magento\Framework\Registry;
 use Magento\TestFramework\Helper\Bootstrap;
 
@@ -48,7 +50,11 @@ class ProductFixtureRollback
         $this->registry->register('isSecureArea', true);
 
         foreach ($productFixtures as $productFixture) {
-            $this->productRepository->deleteById($productFixture->getSku());
+            try {
+                $this->productRepository->deleteById($productFixture->getSku());
+            } catch (\Exception) {
+                // this is fine, products has already been removed
+            }
         }
 
         $this->registry->unregister('isSecureArea');

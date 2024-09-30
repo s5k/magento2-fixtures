@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace TddWizard\Fixtures\Core;
@@ -11,18 +12,26 @@ use Magento\TestFramework\Helper\Bootstrap;
 
 class ConfigFixture
 {
-
     /**
      * Sets configuration in default scope AND all stores, no matter what was configured previously
      *
      * @param string $path
      * @param mixed $value
      */
-    public static function setGlobal(string $path, $value): void
+    public static function setGlobal(string $path, mixed $value): void
     {
-        self::scopeConfig()->setValue($path, $value, ScopeConfigInterface::SCOPE_TYPE_DEFAULT);
+        self::scopeConfig()->setValue(
+            path: $path,
+            value: $value,
+            scopeType: ScopeConfigInterface::SCOPE_TYPE_DEFAULT,
+        );
         foreach (self::storeRepository()->getList() as $store) {
-            self::scopeConfig()->setValue($path, $value, ScopeInterface::SCOPE_STORE, $store->getCode());
+            self::scopeConfig()->setValue(
+                path: $path,
+                value: $value,
+                scopeType: ScopeInterface::SCOPE_STORE,
+                scopeCode: $store->getCode(),
+            );
         }
     }
 
@@ -31,18 +40,29 @@ class ConfigFixture
      *
      * @param string $path
      * @param mixed $value
-     * @param null $storeCode store code or NULL for current store
+     * @param string|null $storeCode store code or NULL for current store
      */
-    public static function setForStore(string $path, $value, $storeCode = null) : void
+    public static function setForStore(string $path, mixed $value, ?string $storeCode = null): void
     {
-        self::scopeConfig()->setValue($path, $value, ScopeInterface::SCOPE_STORE, $storeCode);
+        self::scopeConfig()->setValue(
+            path: $path,
+            value: $value,
+            scopeType: ScopeInterface::SCOPE_STORE,
+            scopeCode: $storeCode,
+        );
     }
 
+    /**
+     * @return MutableScopeConfigInterface
+     */
     private static function scopeConfig(): MutableScopeConfigInterface
     {
         return Bootstrap::getObjectManager()->get(MutableScopeConfigInterface::class);
     }
 
+    /**
+     * @return StoreRepositoryInterface
+     */
     private static function storeRepository(): StoreRepositoryInterface
     {
         return Bootstrap::getObjectManager()->get(StoreRepositoryInterface::class);
