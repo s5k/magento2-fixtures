@@ -157,6 +157,11 @@ class ProductBuilder
             ->setName('Simple Product')
             ->setPrice(10)
             ->setVisibility(Visibility::VISIBILITY_BOTH)
+            ->setImage('no_selection')
+            ->setThumbnail('no_selection')
+            ->setSmallImage('no_selection')
+            ->setKlevuImage('no_selection')
+            ->setImage('no_selection')
             ->setStatus(Status::STATUS_ENABLED);
         $product->addData(
             [
