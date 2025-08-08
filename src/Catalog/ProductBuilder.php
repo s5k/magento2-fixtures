@@ -172,9 +172,9 @@ class ProductBuilder
         /** @var StockItemInterface $stockItem */
         $stockItem = $objectManager->create(StockItemInterface::class);
         $stockItem->setManageStock(true)
-                  ->setQty(100)
-                  ->setIsQtyDecimal(false)
-                  ->setIsInStock(true);
+            ->setQty(100)
+            ->setIsQtyDecimal(false)
+            ->setIsInStock(true);
 
         $extensionAttributes = $product->getExtensionAttributes();
         $extensionAttributes->setStockItem($stockItem);
