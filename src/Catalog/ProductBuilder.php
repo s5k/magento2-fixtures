@@ -160,7 +160,6 @@ class ProductBuilder
             ->setImage('no_selection')
             ->setThumbnail('no_selection')
             ->setSmallImage('no_selection')
-            ->setKlevuImage('no_selection')
             ->setImage('no_selection')
             ->setStatus(Status::STATUS_ENABLED);
         $product->addData(
@@ -499,7 +498,7 @@ class ProductBuilder
             ],
         );
 
-        $fixtureImagePath = $directory->getDir(moduleName: 'Klevu_TestFixtures')
+        $fixtureImagePath = $directory->getDir(moduleName: 'TddWizard_TestFixtures')
             . DIRECTORY_SEPARATOR . '_files'
             . DIRECTORY_SEPARATOR . 'images'
             . DIRECTORY_SEPARATOR . $fileName;
