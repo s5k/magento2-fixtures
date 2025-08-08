@@ -498,7 +498,8 @@ class ProductBuilder
             ],
         );
 
-        $fixtureImagePath = $directory->getDir(moduleName: 'TddWizard_TestFixtures')
+        $fixtureImagePath = $directory->getDir(moduleName: 'TddWizard_Fixtures')
+            . DIRECTORY_SEPARATOR . '..'
             . DIRECTORY_SEPARATOR . '_files'
             . DIRECTORY_SEPARATOR . 'images'
             . DIRECTORY_SEPARATOR . $fileName;
@@ -517,7 +518,7 @@ class ProductBuilder
         $imagePath = $imageUploader->moveFileFromTmp(imageName: $fileName, returnRelativePath: true);
         $builder->product->addImageToMediaGallery(
             file: $imagePath,
-            mediaAttribute: $imageType,
+            mediaAttribute: $imageType ?? 'image',
             move: true,
             exclude: false,
         );

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace TddWizard\Fixtures\Theme;
@@ -10,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @magentoAppIsolation enabled
  * @magentoAppArea frontend
- * @magentoComponentsDir ../../../../vendor/tddwizard/magento2-fixtures/tests/Theme/_files/design
+ * @magentoComponentsDir ../../../../vendor/s5k/magento2-fixtures/tests/Theme/_files/design
  */
 class ThemeFixtureTest extends TestCase
 {
