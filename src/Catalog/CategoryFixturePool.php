@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace TddWizard\Fixtures\Catalog;
@@ -14,6 +15,13 @@ class CategoryFixturePool
      */
     private $categoryFixtures = [];
 
+    /**
+     * Adds category fixture to the pool 
+     * 
+     * @param CategoryInterface $category 
+     * @param null|string $key 
+     * @return void 
+     */
     public function add(CategoryInterface $category, ?string $key = null): void
     {
         if ($key === null) {
@@ -40,6 +48,22 @@ class CategoryFixturePool
         return $this->categoryFixtures[$key];
     }
 
+    /**
+     * Returns all category fixtures
+     *
+     * @return CategoryFixture[]
+     */
+    public function getItems(): array
+    {
+        return $this->categoryFixtures;
+    }
+
+    /**
+     * Rollback all category fixtures.
+     *
+     * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
     public function rollback(): void
     {
         CategoryFixtureRollback::create()->execute(...values($this->categoryFixtures));

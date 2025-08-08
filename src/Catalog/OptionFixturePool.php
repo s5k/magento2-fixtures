@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace TddWizard\Fixtures\Catalog;
@@ -17,6 +18,14 @@ class OptionFixturePool
      */
     private $optionFixtures = [];
 
+    /**
+     * Adds option fixture to the pool
+     * 
+     * @param AttributeOption $option 
+     * @param string $attributecode 
+     * @param null|string $key 
+     * @return void 
+     */
     public function add(AttributeOption $option, string $attributecode, ?string $key = null): void
     {
         if ($key === null) {
@@ -43,6 +52,24 @@ class OptionFixturePool
         return $this->optionFixtures[$key];
     }
 
+    /**
+     * Returns all option fixtures
+     *
+     * @return OptionFixture[]
+     */
+    public function getItems(): array
+    {
+        return $this->optionFixtures;
+    }
+
+    /**
+     * Rollback all option fixtures.
+     *
+     * @return void
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Exception\StateException
+     */
     public function rollback(): void
     {
         OptionFixtureRollback::create()->execute(...values($this->optionFixtures));
