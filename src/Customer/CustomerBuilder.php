@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace TddWizard\Fixtures\Customer;
@@ -7,6 +8,7 @@ use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Framework\Encryption\EncryptorInterface as Encryptor;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Module\Dir as Directory;
 use Magento\TestFramework\Helper\Bootstrap;
 
 /**
@@ -80,6 +82,32 @@ class CustomerBuilder
             $objectManager->create(Encryptor::class),
             $password
         );
+    }
+
+    /**
+     * Bulk-assign data directly to the customer object.
+     *
+     * @param array<string, mixed> $data
+     * @return CustomerBuilder
+     */
+    public function withData(array $data): CustomerBuilder
+    {
+        $builder = clone $this;
+        foreach ($data as $key => $value) {
+            if (method_exists($builder->customer, 'set' . ucfirst($key))) {
+                $builder->customer->{'set' . ucfirst($key)}($value);
+            } else {
+                $builder->customer->setData($key, $value);
+            }
+        }
+        return $builder;
+    }
+
+    public function withPassword(string $password): CustomerBuilder
+    {
+        $builder = clone $this;
+        $builder->password = $password;
+        return $builder;
     }
 
     public function withAddresses(AddressBuilder ...$addressBuilders): CustomerBuilder
@@ -176,6 +204,47 @@ class CustomerBuilder
         foreach ($values as $code => $value) {
             $builder->customer->setCustomAttribute($code, $value);
         }
+        return $builder;
+    }
+
+    /**
+     * Adds an image to the customer by copying it from the module's _files/images directory
+     *
+     * @param string $fileName
+     * @param string $attributeCode
+     * @return $this
+     * @throws \Magento\Framework\Exception\FileSystemException
+     */
+    public function withImage(string $fileName, string $attributeCode): CustomerBuilder
+    {
+        $builder = clone $this;
+
+        $objectManager = Bootstrap::getObjectManager();
+        $filesystem = $objectManager->get(\Magento\Framework\Filesystem::class);
+        $directoryList = $objectManager->get(\Magento\Framework\App\Filesystem\DirectoryList::class);
+        $directory = $objectManager->get(Directory::class);
+
+        // Path to fixture image file in your module's _files/images directory
+        $fixtureImagePath = $directory->getDir(moduleName: 'TddWizard_Fixtures')
+            . DIRECTORY_SEPARATOR . '..'
+            . DIRECTORY_SEPARATOR . '_files'
+            . DIRECTORY_SEPARATOR . 'images'
+            . DIRECTORY_SEPARATOR . $fileName;
+
+        // Destination path in pub/media/customer
+        $mediaDir = $filesystem->getDirectoryWrite($directoryList::MEDIA);
+        $destinationPath = 'customer/' . $fileName;
+        $absoluteDestination = $mediaDir->getAbsolutePath($destinationPath);
+
+        // Copy image to media folder
+        if (!is_dir(dirname($absoluteDestination))) {
+            mkdir(dirname($absoluteDestination), 0775, true);
+        }
+        copy($fixtureImagePath, $absoluteDestination);
+
+        // Set the image path in a custom customer attribute
+        $builder->customer->setCustomAttribute($attributeCode, '/' . $fileName);
+
         return $builder;
     }
 
