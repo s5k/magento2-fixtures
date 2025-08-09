@@ -1,9 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace TddWizard\Fixtures\Customer;
 
-use Faker\Factory as FakerFactory;
+use TddWizard\Fixtures\Faker\Factory as FakerFactory;
 use InvalidArgumentException;
 use Magento\Customer\Api\AddressRepositoryInterface;
 use Magento\Customer\Api\Data\AddressInterface;
