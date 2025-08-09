@@ -40,7 +40,7 @@ class AddressBuilder
     }
 
     public static function anAddress(
-        string $locale = 'de_DE'
+        string $locale = 'en_US'
     ): AddressBuilder {
         $objectManager = Bootstrap::getObjectManager();
 
@@ -49,7 +49,7 @@ class AddressBuilder
     }
 
     public static function aCompanyAddress(
-        string $locale = 'de_DE',
+        string $locale = 'en_US',
         string $vatId = '1234567890'
     ): AddressBuilder {
         $objectManager = Bootstrap::getObjectManager();
@@ -186,7 +186,7 @@ class AddressBuilder
 
     private static function prepareFakeAddress(
         ObjectManagerInterface $objectManager,
-        string $locale = 'de_DE'
+        string $locale = 'en_US'
     ): AddressInterface {
         $faker = FakerFactory::create($locale);
         $countryCode = substr($locale, -2);

@@ -2,15 +2,51 @@
 
 namespace TddWizard\Fixtures\Faker\Providers;
 
+use Faker\Generator;
+
 class PhoneNumber extends \Faker\Provider\PhoneNumber
 {
+    /**
+     * @var Generator
+     */
+    protected $generator;
+
+    public function __construct(Generator $generator)
+    {
+        parent::__construct($generator);
+        $this->generator = $generator;
+    }
+
     public function phoneNumber(): string
     {
-        $phoneNumber = parent::phoneNumber();
+        $localeProvider = $this->findLocalePhoneNumberProvider();
 
-        // use 0-9, +, -, (, ) and space, if other characters are used, they will be removed
-        $phoneNumber = preg_replace('/[^0-9+\-\(\) ]/', '', $phoneNumber);
+        if ($localeProvider) {
+            $phoneNumber = $localeProvider->phoneNumber();
+        } else {
+            // fallback to default
+            $phoneNumber = parent::phoneNumber();
+        }
+
+        // 0-9, +, -, (, ) and space only
+        $phoneNumber = preg_replace('/[^0-9+\-\(\)\s]/u', '', $phoneNumber);
 
         return $phoneNumber;
+    }
+
+    /**
+     * Finds the locale-specific PhoneNumber provider if available
+     */
+    private function findLocalePhoneNumberProvider(): ?object
+    {
+        foreach ($this->generator->getProviders() as $provider) {
+            if (
+                $provider instanceof \Faker\Provider\PhoneNumber &&
+                get_class($provider) !== self::class // avoid recursion
+            ) {
+                return $provider;
+            }
+        }
+        return null;
     }
 }
